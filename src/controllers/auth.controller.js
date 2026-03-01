@@ -1,6 +1,6 @@
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import emailService from "../services/email.services.js";
+import blacklistModel from "../models/blacklist.model.js";
 
 async function userRegisterController(req, res) {
   try {
@@ -34,13 +34,10 @@ async function userRegisterController(req, res) {
       },
       token,
     });
-
-    await emailService.sendRegisterEmail(newUser.email, newUser.name);
   } catch (error) {
     res.status(500).json({ message: "Internal server error", status: "failed" });
   }
 }
-
 async function userLoginController(req, res) {
   try {
     const { email, password } = req.body;
@@ -80,9 +77,29 @@ async function userLoginController(req, res) {
     res.status(500).json({ message: "Internal server error", status: "failed" });
   }
 }
+async function userLogoutController(req,res){
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+  if(!token){
+    return res.status(400).json({
+      message:"User logged out successfully",
+    })
+  }
+
+  res.cookie("token","")
+
+  await blacklistModel.create({
+    token,
+  })
+
+  return res.json({
+    message:"User logged out successfully",
+  })
+}
 
 
 export default {
   userRegisterController,
-  userLoginController
+  userLoginController,
+  userLogoutController
 };

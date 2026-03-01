@@ -59,9 +59,30 @@ async function sendcreateAccountEmail(userEmail,name){
     await sendEmail(userEmail, subject, text, html);
 }
 
+async function sendTransactionEmail(userEmail,name,amount,type){
+    const subject = "Transaction Successful";
+    const text = "Your transaction has been completed successfully";
+    const html = `<p>Dear ${name},</p>
+    <p>Your transaction of ${amount} has been completed successfully.</p>
+    <p>Best regards,<br>Backend Banking</p>`;
+    await sendEmail(userEmail, subject, text, html);
+}
+
+async function sendTransactionFailEmail(userEmail,name,amount,type){
+    const subject = "Transaction Failed";
+    const text = "Your transaction has failed";
+    const html = `<p>Dear ${name},</p>
+    <p>Your transaction of ${amount} has failed.</p>
+    <p>Best regards,<br>Backend Banking</p>`;
+    await sendEmail(userEmail, subject, text, html);
+}
+
+
 export default {
     transporter,
     sendEmail,
     sendRegisterEmail,
-    sendcreateAccountEmail
+    sendcreateAccountEmail,
+    sendTransactionEmail,
+    sendTransactionFailEmail
 }
