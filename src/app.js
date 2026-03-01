@@ -9,6 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// Health check route to verify server status
+app.get('/',(req,res)=>{
+    res.send("Server is running up and running")
+})
+
 app.use("/api/auth", authRouter);
 app.use("/api/accounts", accountRouter);
 app.use("/api/transaction", transactionRouter);
