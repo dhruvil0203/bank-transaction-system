@@ -1,5 +1,6 @@
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import emailService from "../services/email.services.js";
 
 async function userRegisterController(req, res) {
   try {
@@ -33,6 +34,8 @@ async function userRegisterController(req, res) {
       },
       token,
     });
+
+    await emailService.sendRegisterEmail(newUser.email, newUser.name);
   } catch (error) {
     res.status(500).json({ message: "Internal server error", status: "failed" });
   }
